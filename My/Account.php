@@ -517,7 +517,7 @@ $banner = true; // announcment
 				captchaApi: 'https://captcha.roblox.com',
 				catalogApi: 'https://catalog.roblox.com',
 				chatApi: 'https://chat.roblox.com',
-				contactsApi: http://localhost/contacts.roblox.com',
+				contactsApi: 'http://localhost/contacts.roblox.com',
 				contentStoreApi: 'https://contentstore.roblox.com',
 				developApi: 'https://develop.roblox.com',
 				domain: 'roblox.com',
