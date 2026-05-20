@@ -4,7 +4,8 @@ header('Content-Type: application/json');
 date_default_timezone_set('UTC');
 
 include __DIR__ . '/../config/db.php';
-include __DIR__ . '/../../config/filterlist.php';
+include __DIR__ . '/../config/config.php';
+include __DIR__ . '/../config/filterlist.php';
 
 $input = json_decode(file_get_contents("php://input"), true);
 $birthday = isset($input['birthday']) ? $input['birthday'] : null;
@@ -16,16 +17,20 @@ $username = isset($input['username']) ? $input['username'] : null;
 
 $inappropriateList = $inappropriateNameList;
 
+// if registration is disabled
+if ($registrationDisabled == true) {
+    http_response_code(401);
+    exit;
+}
+
 // validation
 if (!$username || !$password) {
     http_response_code(401);
-    echo json_encode(["success" => false]);
     exit;
 }
 
 if (!$isTosAgreementBoxChecked) {
     http_response_code(401);
-    echo json_encode(["success" => false, "message" => "TOS not accepted"]);
     exit;
 }
 
@@ -56,9 +61,10 @@ $stmt->bind_param("s", $username);
 $stmt->execute();
 $res = $stmt->get_result();
 
+// if username taken
 if ($res->num_rows > 0) {
     $stmt->close();
-    echo json_encode(["success" => false, "message" => "Username taken"]);
+    http_response_code(401);
     exit;
 }
 $stmt->close();

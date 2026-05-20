@@ -1,5 +1,7 @@
 <?php
 include __DIR__ . '/config/db.php';
+include __DIR__ . '/config/config.php';
+
 $user = null;
 if (isset($_COOKIE['_ROBLOSECURITY'])) {
     $token = $_COOKIE['_ROBLOSECURITY'];
@@ -29,6 +31,10 @@ if (isset($_COOKIE['_ROBLOSECURITY'])) {
         exit();
     }
 }
+
+$banner = $bannerEnabled; // announcment
+$bannerLabel = $bannerText; // announcment
+$bannerWorkingOnLogin = $bannerEnabledOnSignUpPage;
 ?>
 
 <!DOCTYPE html>
@@ -659,6 +665,9 @@ Roblox.Endpoints.Urls = Roblox.Endpoints.Urls || {};
 <div id="http-retry-data" data-http-retry-max-timeout="0" data-http-retry-base-timeout="0" data-http-retry-max-times="1">
 </div>
     
+<?php if (!empty($banner) && $bannerWorkingOnLogin == true): ?>
+<div class="alert-info" role="alert"><?php echo $bannerLabel;?></div>
+<?php endif; ?>
     
         <script src="https://web.archive.org/web/20200123025244js_/https://roblox-api.arkoselabs.com/fc/api/?onload=reportFunCaptchaLoaded" async onerror="Roblox.BundleDetector &amp;&amp; Roblox.BundleDetector.reportResourceError('funcaptcha')"></script>
 <script type="text/javascript">

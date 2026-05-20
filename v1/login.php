@@ -3,6 +3,7 @@ http_response_code(200);
 header('Content-Type: application/json');
 
 include __DIR__ . '/../config/db.php';
+include __DIR__ . '/../config/config.php';
 
 $input = json_decode(file_get_contents('php://input'), true);
 
@@ -10,9 +11,15 @@ $ctype = $input['ctype'];
 $cvalue = $input['cvalue'];
 $password = $input['password'];
 
-if (!$cvalue || !$password) {
-    echo json_encode(["success" => false]);
+// if login is disabled
+if ($loginDisabled == true) {
+    http_response_code(401);
     exit;
+}
+
+if (!$cvalue || !$password) {
+  http_response_code(401);
+  exit;
 }
 
 // login check
@@ -24,13 +31,13 @@ $user = $result->fetch_assoc();
 $stmt->close();
 
 if (!$user) {
-    echo json_encode(["success" => false]);
-    exit;
+  http_response_code(401);
+  exit;
 }
 
 if (!password_verify($password, $user['password'])) {
-    echo json_encode(["success" => false]);
-    exit;
+  http_response_code(401);
+  exit;
 }
 
 // .roblosecurity gen

@@ -802,6 +802,9 @@ Roblox.Endpoints.Urls = Roblox.Endpoints.Urls || {};
                         
         </div>
 
+        <?php if (!empty($banner)): ?>
+        <div class="alert-info" role="alert"><?php echo $bannerLabel;?></div>
+        <?php endif; ?>
 
         <div class="content">
 
