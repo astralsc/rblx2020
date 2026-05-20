@@ -294,7 +294,7 @@ $banner = true; // announcment
             Roblox.BundleDetector.setTiming(window.performance.timing);
         </script>
         <link href=https://images.rbxcdn.com/23421382939a9f4ae8bbe60dbe2a3e7e.ico.gzip rel=icon>
-        <link rel=manifest href=https://notifications.roblox.com/v2/push-notifications/chrome-manifest crossorigin=use-credentials>
+        <link rel=manifest href=http://localhost/notifications.roblox.com/v2/push-notifications/chrome-manifest crossorigin=use-credentials>
         <link rel=stylesheet onerror=Roblox.BundleDetector&&Roblox.BundleDetector.reportBundleError(this) data-bundlename=StyleGuide data-bundle-source=Main href="https://css.rbxcdn.com/d74f6bdd578f1c3c3cd7078f296e78c2a188a0e6722ab248f14edfe3b2339f5f.css">
         <link rel=stylesheet onerror=Roblox.BundleDetector&&Roblox.BundleDetector.reportBundleError(this) data-bundlename=Thumbnails data-bundle-source=Main href="https://css.rbxcdn.com/9517d686dc47015c200496d77e2b18146ee37652d18e25ecf9e1ed230310ea13.css">
         <link rel=stylesheet onerror=Roblox.BundleDetector&&Roblox.BundleDetector.reportBundleError(this) data-bundlename=VerificationUpsell data-bundle-source=Main href="https://css.rbxcdn.com/4cfc9413aaac922000f010ba651f264e59a200d6062d41f8196017ade0094116.css">
@@ -343,7 +343,7 @@ $banner = true; // announcment
                 "captchaApi": "https://captcha.roblox.com",
                 "catalogApi": "https://catalog.roblox.com",
                 "chatApi": "http://localhost/chat.roblox.com",
-                "contactsApi": "https://contacts.roblox.com",
+                "contactsApi": "http://localhost/contacts.roblox.com",
                 "contentStoreApi": "https://contentstore.roblox.com",
                 "developApi": "https://develop.roblox.com",
                 "domain": "roblox.com",

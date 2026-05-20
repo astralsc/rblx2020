@@ -5,10 +5,10 @@ header('Content-Type: application/json');
 $data = [
     'data' => [
         [
-            'gameTemplateType' => 'Generic',
+            'gameTemplateType' => 'Gameplay', // Theme or Gameplay
             'hasTutorials' => false,
             'universe' => [
-                'id' => 1818,
+                'id' => 13058, // universeid (example: https://apis.roblox.com/universes/v1/places/1818/universe)
                 'name' => 'Classic: Crossroads',
                 'description' => 'The classic ROBLOX level is back!',
                 'isArchived' => false,

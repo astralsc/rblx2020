@@ -2,6 +2,8 @@
 http_response_code(200);
 header('Content-Type: application/json');
 
-$data = (object)[];
+$data = [
+    'count' => 0
+];
 
 echo json_encode($data);

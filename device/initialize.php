@@ -2,6 +2,9 @@
 http_response_code(200);
 header('Content-Type: application/json');
 
-$data = (object)[];
+$data = [
+    'browserTrackerId' => 1234567890,
+    'appDeviceIdentifier' => 'null'
+];
 
 echo json_encode($data);

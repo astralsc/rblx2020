@@ -379,7 +379,7 @@ $banner = true; // announcment
 
 		<link
 			rel="manifest"
-			href="https://notifications.roblox.com/v2/push-notifications/chrome-manifest"
+			href="http://localhost/notifications.roblox.com/v2/push-notifications/chrome-manifest"
 			crossorigin="use-credentials"
 		/>
 		<link
@@ -517,7 +517,7 @@ $banner = true; // announcment
 				captchaApi: 'https://captcha.roblox.com',
 				catalogApi: 'https://catalog.roblox.com',
 				chatApi: 'https://chat.roblox.com',
-				contactsApi: 'https://contacts.roblox.com',
+				contactsApi: http://localhost/contacts.roblox.com',
 				contentStoreApi: 'https://contentstore.roblox.com',
 				developApi: 'https://develop.roblox.com',
 				domain: 'roblox.com',

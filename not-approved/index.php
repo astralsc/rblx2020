@@ -376,7 +376,7 @@ $banner = true; // announcment
 		<link href="https://images.rbxcdn.com/23421382939a9f4ae8bbe60dbe2a3e7e.ico.gzip" rel="icon" />
 		<link
 			rel="manifest"
-			href="https://notifications.roblox.com/v2/push-notifications/chrome-manifest"
+			href="http://localhost/notifications.roblox.com/v2/push-notifications/chrome-manifest"
 			crossorigin="use-credentials"
 		/>
 		<link
@@ -466,7 +466,7 @@ $banner = true; // announcment
 				captchaApi: 'https://captcha.roblox.com',
 				catalogApi: 'https://catalog.roblox.com',
 				chatApi: 'https://chat.roblox.com',
-				contactsApi: 'https://contacts.roblox.com',
+				contactsApi: 'http://localhost/contacts.roblox.com',
 				contentStoreApi: 'https://contentstore.roblox.com',
 				developApi: 'https://develop.roblox.com',
 				domain: 'roblox.com',
@@ -1892,3 +1892,13 @@ $banner = true; // announcment
 		></script>
 	</body>
 </html>
+
+<script>
+setInterval(() => {
+    document.querySelectorAll('a.rbx-menu-item').forEach(qli => {
+        if (qli.textContent.includes("Quick Log In")) {
+            qli.remove();
+        }
+    });
+}, 10);
+</script>
