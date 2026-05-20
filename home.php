@@ -1,7 +1,53 @@
 <?php
-$userId = 1;
-$username = 'ROBLOX';
-$theme = 'light'; // light or dark
+include __DIR__ . '/config/db.php';
+
+$user = null;
+$loggedIn = false;
+$userId = 0;
+$username = 'unknown';
+$displayname = 'unknown';
+$robux = 0;
+$tickets = 0;
+$theme = 'light';
+
+if (isset($_COOKIE['_ROBLOSECURITY'])) {
+    $token = $_COOKIE['_ROBLOSECURITY'];
+
+    $stmt = $DBReq->prepare("
+        SELECT id, username, displayname, isbanned, robux, tickets, roblosecurity, theme
+        FROM accounts
+        WHERE roblosecurity = ?
+    ");
+
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+
+    if ($user) {
+        $loggedIn = true;
+        $userId = $user['id'];
+        $username = $user['username'];
+        $displayname = $user['displayname'];
+        $robux = $user['robux'];
+        $tickets = $user['tickets'];
+
+        if ($user['isbanned'] == 1) {
+            header("Location: /not-approved");
+            exit();
+        }
+
+        $theme = ($user['theme'] === 'Dark') ? 'dark' : 'light';
+    } else {
+        header("Location: /login");
+        exit();
+    }
+} else {
+    header("Location: /login");
+    exit();
+}
 
 $banner = true; // announcment
 ?>
@@ -314,7 +360,7 @@ $banner = true; // announcment
         <script>
             var Roblox = Roblox || {};
             Roblox.RealTimeSettings = Roblox.RealTimeSettings || {
-                NotificationsEndpoint: "https://realtime.roblox.com",
+                NotificationsEndpoint: "http://localhost/realtime.roblox.com",
                 MaxConnectionTime: "21600000",
                 IsEventPublishingEnabled: false,
                 IsDisconnectOnSlowConnectionDisabled: true,
@@ -336,7 +382,7 @@ $banner = true; // announcment
                 "apiGatewayCdnUrl": "https://apis.rbxcdn.com",
                 "apiProxyUrl": "https://api.roblox.com",
                 "assetDeliveryApi": "https://assetdelivery.roblox.com",
-                "authApi": "http://localhost/auth.roblox.com",
+                "authApi": "http://localhost",
                 "avatarApi": "https://avatar.roblox.com",
                 "badgesApi": "https://badges.roblox.com",
                 "billingApi": "https://billing.roblox.com",
@@ -525,7 +571,7 @@ $banner = true; // announcment
             Roblox.Endpoints.Urls['/game/report-event'] = 'https://assetgame.roblox.com/game/report-event';
             Roblox.Endpoints.Urls['/game/updateprerollcount'] = 'https://assetgame.roblox.com/game/updateprerollcount';
             Roblox.Endpoints.Urls['/login/default.aspx'] = 'https://www.roblox.com/login/default.aspx';
-            Roblox.Endpoints.Urls['/my/avatar'] = 'https://www.roblox.com/my/avatar';
+            Roblox.Endpoints.Urls['/my/avatar'] = 'http://localhost/my/avatar';
             Roblox.Endpoints.Urls['/my/money.aspx'] = 'https://www.roblox.com/my/money.aspx';
             Roblox.Endpoints.Urls['/navigation/userdata'] = 'https://www.roblox.com/navigation/userdata';
             Roblox.Endpoints.Urls['/chat/chat'] = 'https://www.roblox.com/chat/chat';

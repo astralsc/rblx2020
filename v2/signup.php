@@ -1,0 +1,131 @@
+<?php
+http_response_code(200);
+header('Content-Type: application/json');
+date_default_timezone_set('UTC');
+
+include __DIR__ . '/../config/db.php';
+
+$input = json_decode(file_get_contents("php://input"), true);
+$birthday = isset($input['birthday']) ? $input['birthday'] : null;
+$context = isset($input['context']) ? $input['context'] : null;
+$gender = isset($input['gender']) ? $input['gender'] : 'Female';
+$isTosAgreementBoxChecked = isset($input['isTosAgreementBoxChecked']) ? $input['isTosAgreementBoxChecked'] : false;
+$password = isset($input['password']) ? $input['password'] : null;
+$username = isset($input['username']) ? $input['username'] : null;
+
+// validation
+if (!$username || !$password) {
+    echo json_encode(["success" => false]);
+    exit;
+}
+
+if (!$isTosAgreementBoxChecked) {
+    echo json_encode(["success" => false, "message" => "TOS not accepted"]);
+    exit;
+}
+
+// format the date and birth
+$dateOfBirth = null;
+if (!empty($birthday)) {
+    $birthday = trim($birthday);
+    $birthday = preg_replace('/\s+/', ' ', $birthday);
+    $birthday = ucwords(strtolower($birthday));
+    $parsedDate = DateTime::createFromFormat('d M Y', $birthday);
+    if ($parsedDate) {
+        $dateOfBirth = $parsedDate->format('Y-m-d');
+    }
+}
+
+// if the user exists
+$stmt = $DBReq->prepare("SELECT id FROM accounts WHERE username = ? LIMIT 1");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$res = $stmt->get_result();
+
+if ($res->num_rows > 0) {
+    $stmt->close();
+    echo json_encode(["success" => false, "message" => "Username taken"]);
+    exit;
+}
+$stmt->close();
+
+$hashedPassword = password_hash($password, PASSWORD_BCRYPT); // hash password
+
+// .roblosecurity gen
+$genNewToken = bin2hex(openssl_random_pseudo_bytes(500));
+$genNewToken = substr($genNewToken, 0, 884);
+$roblosecurity = '_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_'.$genNewToken;
+
+// required fields
+$robux = 0;
+$tickets = 0;
+$userabove13 = 0;
+
+$description = "";
+$status = "";
+$groups = "";
+$inventory = "";
+$avatar = "";
+$games = "";
+
+// timestamp for creation date and updated date (which is when the player was online)
+$createdAt = date('Y-m-d H:i:s');
+$updatedAt = $createdAt;
+
+// insert
+$stmt = $DBReq->prepare("
+    INSERT INTO accounts 
+    (username, displayname, email, password, dateofbirth, gender, robux, tickets, roblosecurity,
+     description, status, userabove13, groups, inventory, avatar, games, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
+
+$email = "";
+
+$stmt->bind_param(
+    "sssssssississsssss",
+    $username,
+    $username,
+    $email,
+    $hashedPassword,
+    $dateOfBirth,
+    $gender,
+    $robux,
+    $tickets,
+    $roblosecurity,
+    $description,
+    $status,
+    $userabove13,
+    $groups,
+    $inventory,
+    $avatar,
+    $games,
+    $createdAt,
+    $updatedAt
+);
+
+if (!$stmt->execute()) {
+    echo json_encode([
+        "success" => false,
+        "error" => $stmt->error
+    ]);
+    exit;
+}
+
+$newUserId = $DBReq->insert_id;
+$stmt->close();
+
+// .roblosecurity setter
+setrawcookie(".ROBLOSECURITY", $roblosecurity, time() + (60 * 60 * 24 * 365), "/");
+
+// final
+$data = [
+  'user' => [
+    'id' => $newUserId,
+    'name' => $username,
+    'displayName' => $username
+  ],
+  'isBanned' => false
+];
+
+echo json_encode($data);

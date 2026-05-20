@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../config/db.php';
+include __DIR__ . '/config/db.php';
 
 $user = null;
 $loggedIn = false;
@@ -34,8 +34,8 @@ if (isset($_COOKIE['_ROBLOSECURITY'])) {
         $robux = $user['robux'];
         $tickets = $user['tickets'];
 
-        if ($user['isbanned'] == 0) {
-            header("Location: /home");
+        if ($user['isbanned'] == 1) {
+            header("Location: /not-approved");
             exit();
         }
 
@@ -949,109 +949,6 @@ $banner = true; // announcment
 
 				</div>
 				<div class="content">
-					<div class="not-approved-page-content">
-						<div class="not-approved-page">
-							<div class="message-container">
-								<h3 class="error-title"><%= pageMeta.moderation.Title %></h3>
-								<p class="message-section">
-									Our content monitors have determined that your behavior at Roblox has been in violation of our
-									<a href="https://www.roblox.com/info/terms" target="_blank">Terms of Use</a>
-									.
-								</p>
-								<p class="message-section" id="punishment-created">
-									Reviewed: <b><%= pageMeta.moderation.DateReviewed %> </b>
-									(CT)
-								</p>
-								<p class="message-section" id="moderator-note">Moderator Note: <b><%= pageMeta.moderation.Note %> </b></p>
-								<% if (pageMeta.moderation.Punishments && pageMeta.moderation.Punishments.length > 0) { %>
-								<div class="punishment-section">
-									<% pageMeta.moderation.Punishments.forEach((punishment) => { %>
-									<p class="message-section">Reason: <b><%= punishment.Reason %></b></p>
-									<p class="message-section">Offensive Item: <b><%= punishment.ItemName %></b></p>
-									<% }); %>
-								</div>
-								<% } %> <% if (!pageMeta.moderation.IsPermanent) { %>
-								<p class="message-section" id="community-guidelines">
-									Please abide by the
-									<a href="https://www.roblox.com/info/community-guidelines" target="_blank"
-										>Roblox Community Guidelines</a
-									>
-									so that Roblox can be fun for users of all ages.
-								</p>
-								<% } else { %>
-								<p class="message-section" id="punishment-description">Your account has been terminated.</p>
-								<% } %> <% if (pageMeta.moderation.IsPermanent) { %>
-								<p class="message-section">
-									If you wish to appeal, please contact us via the
-									<a href="https://www.roblox.com/support" target="_blank">Support Form</a>
-									.
-								</p>
-								<% } else { %> <% if (pageMeta.moderation.CanReactivate) { %>
-
-								<p class="message-section" id="reactivate-message">
-									You may re-activate your account by agreeing to our
-									<a href="https://www.roblox.com/info/terms" target="_blank">Terms of Use</a>
-									.
-								</p>
-								<div style="text-align: center">
-									<div class="checkbox">
-										<input
-											type="checkbox"
-											id="agree-checkbox"
-											onchange="document.getElementById('reactivate-button').disabled = !this.checked;"
-										/>
-										<label for="agree-checkbox">I Agree</label>
-									</div>
-								</div>
-								<% } else { %>
-								<p class="message-section" id="disabled-message">
-									Your account has been disabled. You may re-activate it after <%= pageMeta.moderation.DateCanReactive %>
-									(CT)
-								</p>
-								<p class="message-section">
-									If you wish to appeal, please contact us via the
-									<a href="https://www.roblox.com/support" target="_blank">Support Form</a>
-									.
-								</p>
-								<% } %> <% } %>
-							</div>
-							<div class="action-buttons">
-								<% if (pageMeta.moderation.CanReactivate) { %>
-								<div>
-									<form action="/not-approved/reactivate" method="POST">
-										<input
-											name="__RequestVerificationToken"
-											type="hidden"
-											value="dEP0Ez6SZULCIghur55C6radTZyqrO-8M8SZzuYtDly0hvZMKgpkt5KpizEBn8-YIDa584uHHSCaas4i55mz-yYsEnU1"
-										/>
-										<input
-											data-val="true"
-											data-val-number="The field PunishmentId must be a number."
-											data-val-required="The PunishmentId field is required."
-											id="punishmentId"
-											name="punishmentId"
-											type="hidden"
-											value="<%= pageMeta.moderation.Id %>"
-										/>
-										<button type="submit" class="btn-primary-md btn-min-width" id="reactivate-button" disabled>
-											Re-activate My Account
-										</button>
-									</form>
-								</div>
-								<% } %>
-								<div>
-									<button
-										type="button"
-										class="btn-control-md btn-min-width"
-										id="logout-button"
-										data-bind="http://localhost/v2/logout"
-									>
-										Logout
-									</button>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 			<!--Bootstrap Footer React Component -->

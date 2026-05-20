@@ -1,3 +1,36 @@
+<?php
+include __DIR__ . '/config/db.php';
+$user = null;
+if (isset($_COOKIE['_ROBLOSECURITY'])) {
+    $token = $_COOKIE['_ROBLOSECURITY'];
+
+    $stmt = $DBReq->prepare("
+        SELECT 
+            id,
+            username,
+            displayname,
+            isbanned,
+            robux,
+            tickets,
+            roblosecurity,
+            theme
+        FROM accounts
+        WHERE roblosecurity = ?
+        LIMIT 1
+    ");
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+
+    if ($user) {
+        header("Location: /home");
+        exit();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <!--[if IE 8]><html class="ie8" ng-app="robloxApp"><![endif]-->
 <!--[if gt IE 8]><!-->
@@ -414,7 +447,7 @@ Roblox.BundleDetector.setTiming(window.performance.timing);
 <script type="text/javascript">
     var Roblox = Roblox || {};
     Roblox.EnvironmentUrls = Roblox.EnvironmentUrls || {};
-    Roblox.EnvironmentUrls = {"abtestingApiSite":"https://web.archive.org/web/20200123025244/https://abtesting.roblox.com","accountInformationApi":"https://web.archive.org/web/20200123025244/https://accountinformation.roblox.com","accountSettingsApi":"https://web.archive.org/web/20200123025244/https://accountsettings.roblox.com","adsApi":"https://web.archive.org/web/20200123025244/https://ads.roblox.com","apiGatewayUrl":"https://web.archive.org/web/20200123025244/https://apis.roblox.com","apiProxyUrl":"https://web.archive.org/web/20200123025244/https://api.roblox.com","assetDeliveryApi":"https://web.archive.org/web/20200123025244/https://assetdelivery.roblox.com","authApi":"http://localhost/auth.roblox.com","authAppSite":"https://web.archive.org/web/20200123025244/https://authsite.roblox.com","avatarApi":"https://web.archive.org/web/20200123025244/https://avatar.roblox.com","badgesApi":"https://web.archive.org/web/20200123025244/https://badges.roblox.com","billingApi":"https://web.archive.org/web/20200123025244/https://billing.roblox.com","captchaApi":"https://web.archive.org/web/20200123025244/https://captcha.roblox.com","catalogApi":"https://web.archive.org/web/20200123025244/https://catalog.roblox.com","chatApi":"https://web.archive.org/web/20200123025244/https://chat.roblox.com","contactsApi":"https://web.archive.org/web/20200123025244/contacts.roblox.com","developApi":"https://web.archive.org/web/20200123025244/https://develop.roblox.com","domain":"roblox.com","economyApi":"https://web.archive.org/web/20200123025244/https://economy.roblox.com","engagementPayoutsApi":"https://web.archive.org/web/20200123025244/https://engagementpayouts.roblox.com","followingsApi":"https://web.archive.org/web/20200123025244/https://followings.roblox.com","friendsApi":"https://web.archive.org/web/20200123025244/https://friends.roblox.com","friendsAppSite":"https://web.archive.org/web/20200123025244/https://friendsite.roblox.com","gamesApi":"https://web.archive.org/web/20200123025244/https://games.roblox.com","gameInternationalizationApi":"https://web.archive.org/web/20200123025244/https://gameinternationalization.roblox.com","groupsApi":"https://web.archive.org/web/20200123025244/https://groups.roblox.com","inventoryApi":"https://web.archive.org/web/20200123025244/https://inventory.roblox.com","itemConfigurationApi":"https://web.archive.org/web/20200123025244/https://itemconfiguration.roblox.com","localeApi":"https://web.archive.org/web/20200123025244/https://locale.roblox.com","localizationTablesApi":"https://web.archive.org/web/20200123025244/https://localizationtables.roblox.com","metricsApi":"https://web.archive.org/web/20200123025244/https://metrics.roblox.com","midasApi":"https://web.archive.org/web/20200123025244/https://midas.roblox.com","notificationApi":"https://web.archive.org/web/20200123025244/https://notifications.roblox.com","premiumFeaturesApi":"https://web.archive.org/web/20200123025244/https://premiumfeatures.roblox.com","presenceApi":"https://web.archive.org/web/20200123025244/https://presence.roblox.com","publishApi":"https://web.archive.org/web/20200123025244/https://publish.roblox.com","screenTimeApi":"https://web.archive.org/web/20200123025244/https://apis.rcs.roblox.com/screen-time-api","thumbnailsApi":"https://web.archive.org/web/20200123025244/https://thumbnails.roblox.com","tradesApi":"https://web.archive.org/web/20200123025244/https://trades.roblox.com","translationRolesApi":"https://web.archive.org/web/20200123025244/https://translationroles.roblox.com","universalAppConfigurationApi":"https://web.archive.org/web/20200123025244/https://apis.roblox.com/universal-app-configuration","usersApi":"https://web.archive.org/web/20200123025244/https://users.roblox.com","voiceApi":"https://web.archive.org/web/20200123025244/https://voice.roblox.com","websiteUrl":"https://web.archive.org/web/20200123025244/https://www.roblox.com","privateMessagesApi":"https://web.archive.org/web/20200123025244/https://privatemessages.roblox.com"};
+    Roblox.EnvironmentUrls = {"abtestingApiSite":"https://web.archive.org/web/20200123025244/https://abtesting.roblox.com","accountInformationApi":"https://web.archive.org/web/20200123025244/https://accountinformation.roblox.com","accountSettingsApi":"https://web.archive.org/web/20200123025244/https://accountsettings.roblox.com","adsApi":"https://web.archive.org/web/20200123025244/https://ads.roblox.com","apiGatewayUrl":"https://web.archive.org/web/20200123025244/https://apis.roblox.com","apiProxyUrl":"https://web.archive.org/web/20200123025244/https://api.roblox.com","assetDeliveryApi":"https://web.archive.org/web/20200123025244/https://assetdelivery.roblox.com","authApi":"http://localhost","authAppSite":"https://web.archive.org/web/20200123025244/https://authsite.roblox.com","avatarApi":"https://web.archive.org/web/20200123025244/https://avatar.roblox.com","badgesApi":"https://web.archive.org/web/20200123025244/https://badges.roblox.com","billingApi":"https://web.archive.org/web/20200123025244/https://billing.roblox.com","captchaApi":"https://web.archive.org/web/20200123025244/https://captcha.roblox.com","catalogApi":"https://web.archive.org/web/20200123025244/https://catalog.roblox.com","chatApi":"https://web.archive.org/web/20200123025244/https://chat.roblox.com","contactsApi":"https://web.archive.org/web/20200123025244/contacts.roblox.com","developApi":"https://web.archive.org/web/20200123025244/https://develop.roblox.com","domain":"roblox.com","economyApi":"https://web.archive.org/web/20200123025244/https://economy.roblox.com","engagementPayoutsApi":"https://web.archive.org/web/20200123025244/https://engagementpayouts.roblox.com","followingsApi":"https://web.archive.org/web/20200123025244/https://followings.roblox.com","friendsApi":"https://web.archive.org/web/20200123025244/https://friends.roblox.com","friendsAppSite":"https://web.archive.org/web/20200123025244/https://friendsite.roblox.com","gamesApi":"https://web.archive.org/web/20200123025244/https://games.roblox.com","gameInternationalizationApi":"https://web.archive.org/web/20200123025244/https://gameinternationalization.roblox.com","groupsApi":"https://web.archive.org/web/20200123025244/https://groups.roblox.com","inventoryApi":"https://web.archive.org/web/20200123025244/https://inventory.roblox.com","itemConfigurationApi":"https://web.archive.org/web/20200123025244/https://itemconfiguration.roblox.com","localeApi":"https://web.archive.org/web/20200123025244/https://locale.roblox.com","localizationTablesApi":"https://web.archive.org/web/20200123025244/https://localizationtables.roblox.com","metricsApi":"https://web.archive.org/web/20200123025244/https://metrics.roblox.com","midasApi":"https://web.archive.org/web/20200123025244/https://midas.roblox.com","notificationApi":"https://web.archive.org/web/20200123025244/https://notifications.roblox.com","premiumFeaturesApi":"https://web.archive.org/web/20200123025244/https://premiumfeatures.roblox.com","presenceApi":"https://web.archive.org/web/20200123025244/https://presence.roblox.com","publishApi":"https://web.archive.org/web/20200123025244/https://publish.roblox.com","screenTimeApi":"https://web.archive.org/web/20200123025244/https://apis.rcs.roblox.com/screen-time-api","thumbnailsApi":"https://web.archive.org/web/20200123025244/https://thumbnails.roblox.com","tradesApi":"https://web.archive.org/web/20200123025244/https://trades.roblox.com","translationRolesApi":"https://web.archive.org/web/20200123025244/https://translationroles.roblox.com","universalAppConfigurationApi":"https://web.archive.org/web/20200123025244/https://apis.roblox.com/universal-app-configuration","usersApi":"https://web.archive.org/web/20200123025244/https://users.roblox.com","voiceApi":"https://web.archive.org/web/20200123025244/https://voice.roblox.com","websiteUrl":"https://web.archive.org/web/20200123025244/https://www.roblox.com","privateMessagesApi":"https://web.archive.org/web/20200123025244/https://privatemessages.roblox.com"};
 
     // please keep the list in alphabetical order
     var additionalUrls = {
@@ -546,7 +579,7 @@ Roblox.Endpoints.Urls['/game/report-stats'] = 'https://web.archive.org/web/20200
 Roblox.Endpoints.Urls['/game/report-event'] = 'http://localhost/assetgame.roblox.com/game/report-event';
 Roblox.Endpoints.Urls['/game/updateprerollcount'] = 'https://web.archive.org/web/20200123025244/https://assetgame.roblox.com/game/updateprerollcount';
 Roblox.Endpoints.Urls['/login/default.aspx'] = '/login/default.aspx';
-Roblox.Endpoints.Urls['/my/avatar'] = 'https://web.archive.org/web/20200123025244/https://www.roblox.com/my/avatar';
+Roblox.Endpoints.Urls['/my/avatar'] = 'https://web.archive.org/web/20200123025244/http://localhost/my/avatar';
 Roblox.Endpoints.Urls['/my/money.aspx'] = 'https://web.archive.org/web/20200123025244/https://www.roblox.com/my/money.aspx';
 Roblox.Endpoints.Urls['/navigation/userdata'] = 'https://web.archive.org/web/20200123025244/https://www.roblox.com/navigation/userdata';
 Roblox.Endpoints.Urls['/chat/chat'] = 'https://web.archive.org/web/20200123025244/https://www.roblox.com/chat/chat';

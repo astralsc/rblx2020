@@ -2,12 +2,42 @@
 http_response_code(200);
 header('Content-Type: application/json');
 
+include __DIR__ . '/../../config/db.php';
+
+$user = null;
+$userId = 0;
+$username = 'unknown';
+$displayname = 'unknown';
+$email = '';
+
+if (isset($_COOKIE['_ROBLOSECURITY'])) {
+    $token = $_COOKIE['_ROBLOSECURITY'];
+
+    $stmt = $DBReq->prepare("
+        SELECT id, username, displayname, email
+        FROM accounts
+        WHERE roblosecurity = ?
+    ");
+
+    $stmt->bind_param("s", $token);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
+
+    $userId = $user['id'];
+    $username = $user['username'];
+    $displayname = $user['displayname'];
+    $email = $user['email'];
+}
+
 $data = [
     'ChangeUsernameEnabled' => true,
     'IsAdmin' => false,
-    'UserId' => 22429,
-    'Name' => 'Astral',
-    'DisplayName' => 'Astral',
+    'UserId' => $userId,
+    'Name' => $username,
+    'DisplayName' => $displayname,
     'IsEmailOnFile' => true,
     'IsEmailVerified' => true,
     'IsPhoneFeatureEnabled' => true,
@@ -20,11 +50,11 @@ $data = [
     'IsSetPasswordNotificationEnabled' => false,
     'ChangePasswordRequiresTwoStepVerification' => false,
     'ChangeEmailRequiresTwoStepVerification' => false,
-    'UserEmail' => '*************@gmail.com',
+    'UserEmail' => $email,
     'UserEmailMasked' => true,
     'UserEmailVerified' => true,
     'CanHideInventory' => true,
-    'CanTrade' => false,
+    'CanTrade' => true,
     'MissingParentEmail' => false,
     'IsUpdateEmailSectionShown' => true,
     'IsUnder13UpdateEmailMessageSectionShown' => false,
@@ -61,7 +91,7 @@ $data = [
     ],
     'ApiProxyDomain' => 'http://localhost/api.roblox.com',
     'AccountSettingsApiDomain' => 'http://localhost/accountsettings.roblox.com',
-    'AuthDomain' => 'http://localhost/auth.roblox.com',
+    'AuthDomain' => 'http://localhost',
     'IsDisconnectFacebookEnabled' => true,
     'IsDisconnectXboxEnabled' => true,
     'NotificationSettingsDomain' => 'http://localhost/notifications.roblox.com',
