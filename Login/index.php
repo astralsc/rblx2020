@@ -1,5 +1,7 @@
 <?php
 include __DIR__ . '/../config/db.php';
+include __DIR__ . '/../config/config.php';
+
 $user = null;
 if (isset($_COOKIE['_ROBLOSECURITY'])) {
     $token = $_COOKIE['_ROBLOSECURITY'];
@@ -30,7 +32,8 @@ if (isset($_COOKIE['_ROBLOSECURITY'])) {
     }
 }
 
-$banner = true; // announcment
+$banner = $bannerEnabled; // announcment
+$bannerLabel = $bannerText; // announcment
 ?>
 
 <!DOCTYPE html>

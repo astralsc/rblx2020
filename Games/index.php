@@ -1,5 +1,6 @@
 <?php
-include __DIR__ . '/../config/db.php';
+include __DIR__ . '/config/db.php';
+include __DIR__ . '/config/config.php';
 
 $user = null;
 $loggedIn = false;
@@ -48,8 +49,8 @@ if (isset($_COOKIE['_ROBLOSECURITY'])) {
     header("Location: /login");
     exit();
 }
-
-$banner = true; // announcment
+$banner = $bannerEnabled; // announcment
+$bannerLabel = $bannerText; // announcment
 ?>
 
 <!DOCTYPE html>
@@ -944,7 +945,7 @@ $banner = true; // announcment
 					</noscript>
 
                     <?php if (!empty($banner)): ?>
-                    <div class="alert-info" role="alert">Welcome to RBLX2020!</div>
+                    <div class="alert-info" role="alert"><?php echo $bannerLabel;?></div>
                     <?php endif; ?>
 
 				</div>

@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 date_default_timezone_set('UTC');
 
 include __DIR__ . '/../config/db.php';
+include __DIR__ . '/../../config/filterlist.php';
 
 $input = json_decode(file_get_contents("php://input"), true);
 $birthday = isset($input['birthday']) ? $input['birthday'] : null;
@@ -13,15 +14,28 @@ $isTosAgreementBoxChecked = isset($input['isTosAgreementBoxChecked']) ? $input['
 $password = isset($input['password']) ? $input['password'] : null;
 $username = isset($input['username']) ? $input['username'] : null;
 
+$inappropriateList = $inappropriateNameList;
+
 // validation
 if (!$username || !$password) {
+    http_response_code(401);
     echo json_encode(["success" => false]);
     exit;
 }
 
 if (!$isTosAgreementBoxChecked) {
+    http_response_code(401);
     echo json_encode(["success" => false, "message" => "TOS not accepted"]);
     exit;
+}
+
+// if the name is inappropriate
+$usernameLower = strtolower($username);
+foreach ($inappropriateList as $badWord) {
+    if (strpos($usernameLower, strtolower($badWord)) !== false) {
+        http_response_code(401);
+        exit;
+    }
 }
 
 // format the date and birth
