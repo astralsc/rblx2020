@@ -1,6 +1,6 @@
 <?php
-include __DIR__ . '/config/db.php';
-include __DIR__ . '/config/config.php';
+include __DIR__ . '/../config/db.php';
+include __DIR__ . '/../config/config.php';
 
 $user = null;
 $loggedIn = false;
