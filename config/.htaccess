@@ -1,4 +1,4 @@
-<FilesMatch "^(db)\.php$">
+<FilesMatch "^(db|config|filterlist)\.php$">
     Require all denied
 </FilesMatch>
 
