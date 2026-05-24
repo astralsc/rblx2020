@@ -136,7 +136,7 @@ $newUserId = $DBReq->insert_id;
 $stmt->close();
 
 // .roblosecurity setter
-setrawcookie(".ROBLOSECURITY", $roblosecurity, time() + (60 * 60 * 24 * 365), "/");
+setcookie(".ROBLOSECURITY", $roblosecurity, time() + (60 * 60 * 24 * 365), "/");
 
 // final
 $data = [
